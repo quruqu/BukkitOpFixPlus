@@ -1,0 +1,72 @@
+disallowMessage: "Sorry, access to this is restricted at the moment."
+reloadOpsMessage: "succesfully reloaded ops.json."
+reloadPluginMessage: "succesfully reloaded config.yml."
+
+level1disabledCommands: []
+level2disabledCommands:
+  - ban
+  - ban-ip
+  - datapack
+  - debug
+  - deop
+  - kick
+  - op
+  - pardon
+  - pardon-ip
+  - publish
+  - restart
+  - save-all
+  - save-off
+  - save-on
+  - schedule
+  - seed
+  - defaultgamemode
+  - setidletimeout
+  - setworldspawn
+  - stop
+  - toggledownfall
+  - tps
+  - version
+  - whitelist
+  - worldborder
+  - minecraft:ban
+  - minecraft:ban-ip
+  - minecraft:blockdata
+  - minecraft:datapack
+  - minecraft:debug
+  - minecraft:defaultgamemode
+  - minecraft:deop
+  - minecraft:forceload
+  - minecraft:kick
+  - minecraft:locate
+  - minecraft:op
+  - minecraft:pardon
+  - minecraft:pardon-ip
+  - minecraft:publish
+  - minecraft:reload
+  - minecraft:restart
+  - minecraft:save-all
+  - minecraft:save-off
+  - minecraft:save-on
+  - minecraft:schedule
+  - minecraft:seed
+  - minecraft:setidletimeout
+  - minecraft:setworldspawn
+  - minecraft:stop
+  - minecraft:toggledownfall
+  - minecraft:tps
+  - minecraft:version
+  - minecraft:whitelist
+  - minecraft:worldborder
+  - reload
+  - rl
+  - plugins
+  - pl
+  - bukkit:reload
+  - bukkit:rl
+  - bukkit:plugins
+  - bukkit:pl
+level3disabledCommands:
+  - stop
+  - minecraft:stop
+level4disabledCommands: []

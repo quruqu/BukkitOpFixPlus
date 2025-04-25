@@ -1,0 +1,8 @@
+name: BukkitOpFixPlus
+version: '1.0'
+description: fork of the BukkitOpFix by ZathrusWriter
+author: [Ujun]
+main: me.ujun.Main
+api-version: '1.21'
+commands:
+  reload-bukkitopfix:
