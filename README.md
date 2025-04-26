@@ -1,5 +1,15 @@
-BukkitOpFix - a Spigot plug-in that re-implements permission levels for OPs which were always broken in Bukkit.
+BukkitOpFixPlus - A for of the BukkitOpFix by martinambrus
+
+original explanation:
+a Spigot plug-in that re-implements permission levels for OPs which were always broken in Bukkit.
 
 You can set the OP permission levels using the "op-permission-level" configuration node in your server.properties file.
 
 To read more about it in the (now seems to be outdated) MinecraftPedia, follow this link: http://minecraft.gamepedia.com/Server.properties
+
+
+Differences from the original:
+- Added /reload-bukkitopfix <ops|config> command
+- Also blocked commands like /execute run stop
+- Restricted autocompletion
+- Restricted level 2 unallowed commands in command blocks
