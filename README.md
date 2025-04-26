@@ -1,4 +1,4 @@
-BukkitOpFixPlus -Exploit Bukkit's broken op-permission-level feature
+BukkitOpFixPlus - Fix Bukkit's broken op-permission-level feature
 
 Differences from the original:
 - Added /reload-bukkitopfix <ops|config> command
