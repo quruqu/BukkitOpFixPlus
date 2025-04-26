@@ -1,4 +1,4 @@
-BukkitOpFixPlus - A for of the BukkitOpFix by martinambrus
+BukkitOpFixPlus - A fork of the BukkitOpFix by martinambrus
 
 original explanation:
 a Spigot plug-in that re-implements permission levels for OPs which were always broken in Bukkit.
