@@ -3,9 +3,12 @@ package me.ujun;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.CommandBlock;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -108,14 +111,14 @@ public class Detect implements Listener {
         }
     }
 
-    //commandblock
+    //commandblock, commandminecart
     @EventHandler(priority=EventPriority.LOWEST, ignoreCancelled=true)
     public void onServerCommand(ServerCommandEvent event) {
         CommandSender sender = event.getSender();
         String rawCommand = event.getCommand().toLowerCase();
 
 
-        if (!(sender instanceof BlockCommandSender)) return;
+        if (!((sender instanceof BlockCommandSender) || (sender instanceof CommandMinecart))) return;
 
         String actualCommand = rawCommand.split(" ")[0];
 
@@ -129,7 +132,6 @@ public class Detect implements Listener {
                 }
             }
         }
-
 
         List<String> disabledOpCommands = plugin.disabledCommandCache.getOrDefault(2 , Collections.emptyList());
 
