@@ -46,10 +46,21 @@ public class Detect implements Listener {
             String[] split = baseCommand.split(" ");
 
             String primaryCommand = split[0];
-
-
             String actualCommand = primaryCommand;
-            if (primaryCommand.equals("execute")) {
+
+            if (primaryCommand.equals("npc") || primaryCommand.equals("fancynpcs:npc")) {
+                if (baseCommand.contains("action") && baseCommand.contains("console_command")) {
+                    for (int i = 1; i < split.length - 1; i++) {
+                        if (split[i].equals("console_command")) {
+                            actualCommand = split[i + 1];
+                            break;
+                        }
+                    }
+                }
+            }
+
+
+            if (primaryCommand.equals("minecraft:execute") || primaryCommand.equals("execute")) {
 
                 for (int i = 1; i < split.length - 1; i++) {
                     if (split[i].equals("run")) {
