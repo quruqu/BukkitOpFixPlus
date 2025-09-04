@@ -43,33 +43,9 @@ public class Detect implements Listener {
 
         if (player.isOp()) {
             String baseCommand = message.substring(1);
-            String[] split = baseCommand.split(" ");
-
-            String primaryCommand = split[0];
-            String actualCommand = primaryCommand;
-
-            if (primaryCommand.equals("npc") || primaryCommand.equals("fancynpcs:npc")) {
-                if (baseCommand.contains("action") && baseCommand.contains("console_command")) {
-                    for (int i = 1; i < split.length - 1; i++) {
-                        if (split[i].equals("console_command")) {
-                            actualCommand = split[i + 1];
-                            break;
-                        }
-                    }
-                }
-            }
 
 
-            if (primaryCommand.equals("minecraft:execute") || primaryCommand.equals("execute")) {
-
-                for (int i = 1; i < split.length - 1; i++) {
-                    if (split[i].equals("run")) {
-                        actualCommand = split[i + 1];
-                        break;
-                    }
-                }
-            }
-
+            String actualCommand = getActualCommand(baseCommand);
 
             int localOpLevel = plugin.perPlayerLevel.getOrDefault(player.getUniqueId().toString(),plugin.opLevel);
             List<String> disabledOpCommands = plugin.disabledCommandCache.getOrDefault(localOpLevel, Collections.emptyList());
@@ -130,19 +106,8 @@ public class Detect implements Listener {
 
 
         if (!((sender instanceof BlockCommandSender) || (sender instanceof CommandMinecart))) return;
+       String actualCommand = getActualCommand(rawCommand);
 
-        String actualCommand = rawCommand.split(" ")[0];
-
-
-        if (actualCommand.equals("execute")) {
-            String[] parts = rawCommand.split(" ");
-            for (int i = 0; i < parts.length - 1; i++) {
-                if (parts[i].equals("run")) {
-                    actualCommand = parts[i + 1];
-                    break;
-                }
-            }
-        }
 
         List<String> disabledOpCommands = plugin.disabledCommandCache.getOrDefault(2 , Collections.emptyList());
 
@@ -153,5 +118,32 @@ public class Detect implements Listener {
     }
 
 
+    private String getActualCommand(String baseCommand) {
+        String[] split = baseCommand.split(" ");
+        String actualCommand = split[0];
+
+        if (actualCommand.equals("npc") || actualCommand.equals("fancynpcs:npc")) {
+            if (baseCommand.contains("action") && baseCommand.contains("console_command")) {
+                for (int i = 1; i < split.length - 1; i++) {
+                    if (split[i].equals("console_command")) {
+                        actualCommand = split[i + 1];
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        if (actualCommand.equals("minecraft:execute") || actualCommand.equals("execute")) {
+            for (int i = split.length -1; i >= 0; i--) {
+                if (split[i].equals("run")) {
+                    actualCommand = split[i + 1];
+                    break;
+                }
+            }
+        }
+
+        return actualCommand;
+    }
 
 }
