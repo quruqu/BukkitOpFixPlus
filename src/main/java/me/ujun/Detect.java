@@ -22,6 +22,7 @@ import org.bukkit.event.server.ServerCommandEvent;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 public class Detect implements Listener {
     private Main plugin;
@@ -44,14 +45,9 @@ public class Detect implements Listener {
         if (player.isOp()) {
             String baseCommand = message.substring(1);
 
-
-            String actualCommand = getActualCommand(baseCommand);
-
             int localOpLevel = plugin.perPlayerLevel.getOrDefault(player.getUniqueId().toString(),plugin.opLevel);
-            List<String> disabledOpCommands = plugin.disabledCommandCache.getOrDefault(localOpLevel, Collections.emptyList());
 
-
-            if (disabledOpCommands.contains(actualCommand.toLowerCase())) {
+            if (isDisabledCommand(baseCommand, localOpLevel)) {
                 player.sendMessage(ChatColor.RED + plugin.getConfig().getString("disallowMessage"));
                 event.setCancelled(true);
             }
@@ -106,44 +102,51 @@ public class Detect implements Listener {
 
 
         if (!((sender instanceof BlockCommandSender) || (sender instanceof CommandMinecart))) return;
-       String actualCommand = getActualCommand(rawCommand);
+
+       if (isDisabledCommand(rawCommand, 2)) {
+           sender.sendMessage(ChatColor.RED + plugin.getConfig().getString("disallowMessage"));
+           event.setCommand("");
+       }
 
 
-        List<String> disabledOpCommands = plugin.disabledCommandCache.getOrDefault(2 , Collections.emptyList());
-
-        if (disabledOpCommands.contains(actualCommand)) {
-            sender.sendMessage(ChatColor.RED + plugin.getConfig().getString("disallowMessage"));
-            event.setCommand("");
-        }
     }
 
 
-    private String getActualCommand(String baseCommand) {
+    private boolean isDisabledCommand(String baseCommand, int opLevel) {
         String[] split = baseCommand.split(" ");
         String actualCommand = split[0];
+        List<String> disabledOpCommands = plugin.disabledCommandCache.getOrDefault(opLevel , Collections.emptyList());
+
+        if (actualCommand.equals("minecraft:execute") || actualCommand.equals("execute")) {
+            for (int i = 0; i < split.length - 1; i++) {
+                if (split[i].equals("run") && (split[i+1].equals("npc") || split[i+1].equals("fancynpcs:npc"))) {
+                    actualCommand = "npc";
+                    break;
+                }
+
+            }
+        }
 
         if (actualCommand.equals("npc") || actualCommand.equals("fancynpcs:npc")) {
             if (baseCommand.contains("action") && baseCommand.contains("console_command")) {
                 for (int i = 1; i < split.length - 1; i++) {
-                    if (split[i].equals("console_command")) {
-                        actualCommand = split[i + 1];
-                        break;
+                    if (split[i].equals("console_command") && disabledOpCommands.contains(split[i + 1])) {
+                        return true;
                     }
                 }
             }
         }
 
-
         if (actualCommand.equals("minecraft:execute") || actualCommand.equals("execute")) {
-            for (int i = split.length -1; i >= 0; i--) {
-                if (split[i].equals("run")) {
-                    actualCommand = split[i + 1];
-                    break;
+            for (int i = 0; i < split.length - 1; i++) {
+                if (split[i].equals("run") && disabledOpCommands.contains(split[i + 1])) {
+                    return true;
                 }
             }
         }
 
-        return actualCommand;
+
+        return disabledOpCommands.contains(actualCommand);
     }
 
 }
