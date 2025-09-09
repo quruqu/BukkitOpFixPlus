@@ -1,5 +1,5 @@
 name: BukkitOpFixPlus
-version: '1.0'
+version: ${project.version}
 description: fork of the BukkitOpFix by ZathrusWriter
 author: [Ujun]
 main: me.ujun.Main
