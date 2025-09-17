@@ -128,7 +128,7 @@ public class Detect implements Listener {
         if (actualCommand.equals("minecraft:execute") || actualCommand.equals("execute")) {
             for (int i = 0; i < split.length - 1; i++) {
                 if (split[i].equals("run") && (split[i+1].equals("npc") || split[i+1].equals("fancynpcs:npc"))) {
-//                    Bukkit.getLogger().info("익큣을 npc 명령어로 쓰고 있음");
+                    Bukkit.getLogger().info("익큣을 npc 명령어로 쓰고 있음");
                     actualCommand = "npc";
                     break;
                 }
@@ -137,28 +137,26 @@ public class Detect implements Listener {
         }
 
         if (actualCommand.equals("npc") || actualCommand.equals("fancynpcs:npc")) {
-//            Bukkit.getLogger().info("npc인 건 감지함");
+            Bukkit.getLogger().info("npc인 건 감지함");
             if (baseCommand.contains("action") && baseCommand.contains("console_command")) {
-//                Bukkit.getLogger().info("action이랑 console_command 있는 거 감지함");
+                Bukkit.getLogger().info("action이랑 console_command 있는 거 감지함");
                 for (int i = 1; i < split.length - 1; i++) {
                     if (split[i].equals("console_command") && disabledOpCommands.contains(split[i + 1])) {
-//                        Bukkit.getLogger().info("consolecommand + " + split[i + 1]);
+                        Bukkit.getLogger().info("consolecommand + " + split[i + 1]);
                         return true;
                     } else if (split[i].equals("console_command") && (split[i+1].equals("execute") || (split[i+1].equals("minecraft:execute")))) {
-//                        Bukkit.getLogger().info("console_command에 execute 발견");
+                        Bukkit.getLogger().info("console_command에 execute 발견");
                         actualCommand = "execute";
-                        break;
                     }
 //                    else if (split[i].equals("console_command") && (split[i+1].equals("npc") || (split[i+1].equals("fancynpcs:npc")))) {
 //                        String result = String.join(" ", Arrays.copyOfRange(split, i, split.length));
 //                        return isDisabledCommand(result, opLevel, depth);
-//                    }
+
 
                 }
             }
         }
 
-        //execute run execute store result ditto.storage console_command int 1 run npc action pr2n set 1 console_command kick
 
         if (actualCommand.equals("minecraft:execute") || actualCommand.equals("execute")) {
             for (int i = 0; i < split.length - 1; i++) {
