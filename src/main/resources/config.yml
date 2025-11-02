@@ -4,6 +4,8 @@ reloadPluginMessage: "succesfully reloaded config.yml."
 
 level1disabledCommands: []
 level2disabledCommands:
+  - bukkitopfixplus:setoplevel
+  - setoplevel
   - ban
   - ban-ip
   - datapack

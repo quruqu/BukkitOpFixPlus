@@ -1,10 +1,10 @@
 package me.ujun;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -41,8 +43,67 @@ public class Main extends JavaPlugin implements Listener {
 
         this.getServer().getPluginManager().registerEvents(this, this);
         this.getServer().getPluginManager().registerEvents(new Detect(this), this);
-        getCommand("reload-bukkitopfix").setExecutor(new Command(this));
+
+        Command cmd = new Command(this);
+        getCommand("setoplevel").setExecutor(cmd);
+        getCommand("reload-bukkitopfix").setExecutor(cmd);
         getCommand("reload-bukkitopfix").setTabCompleter(new CommandTabCompleter());
+    }
+
+    public void updateOpsJson() {
+        try {
+            String opsFileContent = readFile("ops.json", StandardCharsets.UTF_8);
+
+            Type listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            List<Map<String, Object>> ops = gson.fromJson(opsFileContent, listType);
+            if (ops == null) ops = new ArrayList<>();
+
+            Map<String, Map<String, Object>> byUuid = new HashMap<>();
+            for (Map<String, Object> entry : ops) {
+                Object u = entry.get("uuid");
+                if (u instanceof String uuid && !uuid.isEmpty()) {
+                    byUuid.put(uuid, entry);
+                }
+            }
+
+            // perPlayerLevel과 비교하여 level만 갱신
+            boolean changed = false;
+            for (Map.Entry<String, Integer> e : perPlayerLevel.entrySet()) {
+                String uuid = e.getKey();
+                int desiredLevel = e.getValue();
+
+                Map<String, Object> entry = byUuid.get(uuid);
+                if (entry != null) {
+                    int currentLevel = asInt(entry.get("level"));
+                    if (currentLevel != desiredLevel) {
+                        entry.put("level", desiredLevel);
+                        changed = true;
+                    }
+                }
+            }
+
+            if (changed) {
+                String pretty = gson.toJson(ops);
+                Files.writeString(Path.of("ops.json"), pretty, StandardCharsets.UTF_8);
+
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    p.updateCommands();
+                }
+            }
+
+        } catch (IOException ex) {
+            Bukkit.getLogger().warning("[BukkitOpFix] Failed to update ops.json.");
+            ex.printStackTrace();
+        }
+    }
+
+    private static int asInt(Object v) {
+        if (v instanceof Number n) return n.intValue();
+        if (v instanceof String s) {
+            try { return Integer.parseInt(s.trim()); } catch (Exception ignored) {}
+        }
+        return 0;
     }
 
     @SuppressWarnings("unchecked")
@@ -62,7 +123,6 @@ public class Main extends JavaPlugin implements Listener {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 p.updateCommands();
             }
-
 
         } catch (IOException e1) {
             Bukkit.getLogger().warning("[BukkitOpFix] Failed to load data from ops.json file.");
@@ -103,6 +163,4 @@ public class Main extends JavaPlugin implements Listener {
             p.updateCommands();
         }
     }
-
-
 }

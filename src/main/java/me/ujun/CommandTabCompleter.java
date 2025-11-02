@@ -17,7 +17,6 @@ public class CommandTabCompleter implements TabCompleter {
             completions.add("ops");
             completions.add("config");
         }
-
         return completions;
     }
 }

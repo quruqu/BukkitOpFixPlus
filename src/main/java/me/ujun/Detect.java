@@ -61,10 +61,8 @@ public class Detect implements Listener {
         Player player = event.getPlayer();
 
         if (player.isOp()) {
-
             int localOpLevel = plugin.perPlayerLevel.getOrDefault(player.getUniqueId().toString(),plugin.opLevel);
             List<String> disabledOpCommands = plugin.disabledCommandCache.getOrDefault(localOpLevel, Collections.emptyList());
-
 
             for (String command : disabledOpCommands) {
                 event.getCommands().remove(command);
@@ -101,13 +99,12 @@ public class Detect implements Listener {
         CommandSender sender = event.getSender();
         String rawCommand = event.getCommand().toLowerCase();
 
-
         if (!((sender instanceof BlockCommandSender) || (sender instanceof CommandMinecart))) return;
 
-       if (isDisabledCommand(rawCommand, 2, 10)) {
-           sender.sendMessage(ChatColor.RED + plugin.getConfig().getString("disallowMessage"));
-           event.setCommand("");
-       }
+        if (isDisabledCommand(rawCommand, 2, 10)) {
+            sender.sendMessage(ChatColor.RED + plugin.getConfig().getString("disallowMessage"));
+            event.setCommand("");
+        }
 
 
     }
@@ -128,7 +125,7 @@ public class Detect implements Listener {
         if (actualCommand.equals("minecraft:execute") || actualCommand.equals("execute")) {
             for (int i = 0; i < split.length - 1; i++) {
                 if (split[i].equals("run") && (split[i+1].equals("npc") || split[i+1].equals("fancynpcs:npc"))) {
-                    Bukkit.getLogger().info("익큣을 npc 명령어로 쓰고 있음");
+//                    Bukkit.getLogger().info("익큣을 npc 명령어로 쓰고 있음");
                     actualCommand = "npc";
                     break;
                 }
@@ -137,15 +134,15 @@ public class Detect implements Listener {
         }
 
         if (actualCommand.equals("npc") || actualCommand.equals("fancynpcs:npc")) {
-            Bukkit.getLogger().info("npc인 건 감지함");
+//            Bukkit.getLogger().info("npc인 건 감지함");
             if (baseCommand.contains("action") && baseCommand.contains("console_command")) {
-                Bukkit.getLogger().info("action이랑 console_command 있는 거 감지함");
+//                Bukkit.getLogger().info("action이랑 console_command 있는 거 감지함");
                 for (int i = 1; i < split.length - 1; i++) {
                     if (split[i].equals("console_command") && disabledOpCommands.contains(split[i + 1])) {
-                        Bukkit.getLogger().info("consolecommand + " + split[i + 1]);
+//                        Bukkit.getLogger().info("consolecommand + " + split[i + 1]);
                         return true;
                     } else if (split[i].equals("console_command") && (split[i+1].equals("execute") || (split[i+1].equals("minecraft:execute")))) {
-                        Bukkit.getLogger().info("console_command에 execute 발견");
+//                        Bukkit.getLogger().info("console_command에 execute 발견");
                         actualCommand = "execute";
                     }
 //                    else if (split[i].equals("console_command") && (split[i+1].equals("npc") || (split[i+1].equals("fancynpcs:npc")))) {
@@ -157,7 +154,6 @@ public class Detect implements Listener {
             }
         }
 
-
         if (actualCommand.equals("minecraft:execute") || actualCommand.equals("execute")) {
             for (int i = 0; i < split.length - 1; i++) {
                 if (split[i].equals("run") && disabledOpCommands.contains(split[i + 1])) {
@@ -165,7 +161,6 @@ public class Detect implements Listener {
                 }
             }
         }
-
 
         return disabledOpCommands.contains(actualCommand);
     }

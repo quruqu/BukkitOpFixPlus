@@ -6,3 +6,5 @@ main: me.ujun.Main
 api-version: '1.21'
 commands:
   reload-bukkitopfix:
+  setoplevel:
+    permission: op
